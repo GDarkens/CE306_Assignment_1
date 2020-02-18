@@ -30,6 +30,19 @@ public class Main {
 
         textPreProcessor(webpageText);
 
-    }
 
+        for(String s : webpageBulletArray){
+            System.out.println(s);
+        }
+        for(String s : webpageTableArray){
+            System.out.println(s);
+        }
+        for(String s : webpageSentenceArray){
+            System.out.println(s);
+        }
+        for(String s : webpageMetatagArray){
+            System.out.println(s);
+        }
+
+    }
 }
