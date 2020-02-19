@@ -1,4 +1,4 @@
-package com.company;
+package com.darkens;
 
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.SentenceUtils;
@@ -8,6 +8,7 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import java.text.BreakIterator;
 import java.util.*;
 
+import static java.lang.Math.log;
 
 
 class TextProcessing {
@@ -139,12 +140,29 @@ class TextProcessing {
         return phraseSet;
     }
 
-    static void tfIdf(List<String> document, String term){
+    static double tfIdf(List<String> document, String term, List<PipelineObject> corpus){
+        /*
+            Calls the termFreq and inverseDocFreq sub functions to
+            calculate the tf*idf of a term across all documents in corpus
+         */
+        double tf = termFreq(document, term);
+        double idf = inverseDocFreq(corpus, term);
+
+        return tf*idf;
+    }
+
+    static double termFreq(List<String> document, String term){
+        /*
+            Given a document and a term, the function will count the amount of
+            times that it appears in a given document and return that value.
+         */
         double freq = 0;
         double docSize = 0;
+        term = term.toLowerCase();
 
         double tf = 0;
 
+        //Iterating over each sentence, then each word
         for (String sentence : document) {
             for(String word : sentence.split(" ")){
                 docSize ++;
@@ -153,8 +171,47 @@ class TextProcessing {
             }
         }
 
-
         tf = freq / docSize;
 
+        return tf;
+    }
+
+    static double inverseDocFreq(List<PipelineObject> corpus, String term){
+        /*
+            Given a List of PipelineObjects as the document corpus and a term,
+            the function will calculate the IDF of the term across the corpus
+         */
+        double freq = 0;
+        term = term.toLowerCase();
+
+
+        //Iterating over each document, then each word in it
+        for(PipelineObject document: corpus){
+            for(String word : document.webpageText.split(" ")){
+                if(term.equals(word)){
+                    freq++;
+                    break; //If the doc has the phrase, no point continuing for IDF
+                }
+            }
+        }
+
+        return log(corpus.size() / freq);
+    }
+
+    static void keywordRanking(List<PipelineObject> corpus){
+        String bestKeyword = "";
+        double bestKeywordVal = 0;
+
+        for(PipelineObject document: corpus){
+            for(String keyword : document.keywordSet){
+                if(tfIdf(document.webpageSentenceArray, keyword, corpus) > bestKeywordVal){
+                    bestKeyword = keyword;
+                    bestKeywordVal = tfIdf(document.webpageSentenceArray, keyword, corpus);
+                }
+            }
+        }
+
+        System.out.println("Best keyword: " + bestKeyword);
+        System.out.println("Value: " + bestKeywordVal);
     }
 }

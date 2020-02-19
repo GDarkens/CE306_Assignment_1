@@ -1,4 +1,4 @@
-package com.company;
+package com.darkens;
 
 import edu.stanford.nlp.ling.TaggedWord;
 import org.jsoup.nodes.Document;
@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.company.DocumentProcessing.*;
-import static com.company.TextProcessing.*;
+import static com.darkens.DocumentProcessing.*;
+import static com.darkens.TextProcessing.*;
 
 class PipelineObject {
     Document webpageDoc;
@@ -25,7 +25,7 @@ class PipelineObject {
     List<TaggedWord> taggedTableList;
     List<TaggedWord> taggedMetatagList;
 
-    Set<String> keywordSet = new HashSet<>();
+    Set<String> keywordSet;
 
     String theUrl;
 
@@ -34,7 +34,7 @@ class PipelineObject {
         webpageMetatagArray = new ArrayList<>();
         webpageBulletArray = new ArrayList<>();
         webpageTableArray = new ArrayList<>();
-        keywordSet = new HashSet<>();
+        keywordSet = new HashSet<String>();
 
         theUrl = URL;
 
@@ -54,7 +54,8 @@ class PipelineObject {
         //Calls nounPhraseChunkHandler() tagged data from tagHandler()
         keywordSet.addAll(nounPhraseChunkHandler());
 
-        //tfIdf(webpageSentenceArray, "and");
+        /////////
+        TextProcessing.keywordRanking(Main.documentList);
 
     }
 

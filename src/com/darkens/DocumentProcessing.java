@@ -1,4 +1,4 @@
-package com.company;
+package com.darkens;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,7 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.company.TextProcessing.stopWordRemoval;
+import static com.darkens.TextProcessing.stopWordRemoval;
 
 class DocumentProcessing {
 
