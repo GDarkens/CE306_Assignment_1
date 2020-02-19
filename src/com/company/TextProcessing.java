@@ -93,6 +93,7 @@ class TextProcessing {
     }
     static Set<String> nounPhraseChunkExtract(List<TaggedWord> taggedWordList){
         /*
+
             Given a list of tagged words, this function will read through and extract
             noun-phrase chunks (NPs).
             These NPs will be used as keywords for the document.
@@ -136,5 +137,24 @@ class TextProcessing {
             }
         }
         return phraseSet;
+    }
+
+    static void tfIdf(List<String> document, String term){
+        double freq = 0;
+        double docSize = 0;
+
+        double tf = 0;
+
+        for (String sentence : document) {
+            for(String word : sentence.split(" ")){
+                docSize ++;
+                if (term.equals(word))
+                    freq++;
+            }
+        }
+
+
+        tf = freq / docSize;
+
     }
 }
