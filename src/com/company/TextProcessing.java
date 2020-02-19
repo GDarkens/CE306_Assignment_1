@@ -1,9 +1,14 @@
 package com.company;
 
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.SentenceUtils;
+import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+
 import java.text.BreakIterator;
 import java.util.*;
 
-import static com.company.Main.*;
+import static com.company.Main.webpageSentenceArray;
 
 class TextProcessing {
 
@@ -61,5 +66,29 @@ class TextProcessing {
             );
         }
     }
+
+    static List<TaggedWord> partOfSpeechTagging(ArrayList<String> arrayToTag){
+        /*
+            https://nlp.stanford.edu/software/tagger.shtml - "Stanford Log-linear Part-Of-Speech Tagger"
+            Given an array, this method will take each String entry and feed it to the POS tagger, which
+            will return the tagged words in a new LinkedList.
+        */
+
+        //There are other modelFile options, but I found this trained model to be sufficiently fast and accurate
+        MaxentTagger speechTagger = new MaxentTagger("./assets/english-left3words-distsim.tagger");
+        List<HasWord> untaggedWordsList;
+        List<TaggedWord> taggedWordsListTemp;
+        List<TaggedWord> taggedWordsListFinal = new LinkedList<>();
+
+        for(String sentence : arrayToTag){
+            untaggedWordsList = SentenceUtils.toWordList(sentence.split(" "));
+            taggedWordsListTemp = speechTagger.tagSentence(untaggedWordsList);
+            taggedWordsListFinal.addAll(taggedWordsListTemp);
+        }
+
+
+        return taggedWordsListFinal;
+    }
+
 
 }

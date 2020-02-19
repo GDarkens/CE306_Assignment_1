@@ -1,14 +1,18 @@
 package com.company;
 
 import org.jsoup.nodes.Document;
-import java.util.*;
+
+import java.util.ArrayList;
 
 import static com.company.DocumentProcessing.*;
-import static com.company.TextProcessing.*;
+import static com.company.TextProcessing.partOfSpeechTagging;
+import static com.company.TextProcessing.textPreProcessor;
 
 public class Main {
     static Document webpageDoc;
     static String webpageText;
+
+
 
     static ArrayList<String> webpageBulletArray;
     static ArrayList<String> webpageTableArray;
@@ -31,18 +35,6 @@ public class Main {
         textPreProcessor(webpageText);
 
 
-        for(String s : webpageBulletArray){
-            System.out.println(s);
-        }
-        for(String s : webpageTableArray){
-            System.out.println(s);
-        }
-        for(String s : webpageSentenceArray){
-            System.out.println(s);
-        }
-        for(String s : webpageMetatagArray){
-            System.out.println(s);
-        }
-
+        partOfSpeechTagging(webpageSentenceArray);
     }
 }
