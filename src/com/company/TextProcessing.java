@@ -59,7 +59,7 @@ class TextProcessing {
         breakIterator.setText(webpageText);
         int start = breakIterator.first();
 
-        //For each sentence, before adding - remove stop words and make it lower case (case fold)
+        //For each sentence, before adding make it lower case (case fold)
         for(int finish = breakIterator.next(); finish != BreakIterator.DONE; start = finish, finish = breakIterator.next()) {
             webpageSentenceArray.add(
                     webpageText.substring(start, finish).toLowerCase(Locale.ENGLISH)
@@ -76,19 +76,65 @@ class TextProcessing {
 
         //There are other modelFile options, but I found this trained model to be sufficiently fast and accurate
         MaxentTagger speechTagger = new MaxentTagger("./assets/english-left3words-distsim.tagger");
+
         List<HasWord> untaggedWordsList;
         List<TaggedWord> taggedWordsListTemp;
         List<TaggedWord> taggedWordsListFinal = new LinkedList<>();
 
-        for(String sentence : arrayToTag){
-            untaggedWordsList = SentenceUtils.toWordList(sentence.split(" "));
+        for(String arrayEntry : arrayToTag){
+            untaggedWordsList = SentenceUtils.toWordList(arrayEntry.split(" "));
             taggedWordsListTemp = speechTagger.tagSentence(untaggedWordsList);
             taggedWordsListFinal.addAll(taggedWordsListTemp);
         }
 
 
+
         return taggedWordsListFinal;
     }
+    static Set<String> nounPhraseChunkExtract(List<TaggedWord> taggedWordList){
+        /*
+            Given a list of tagged words, this function will read through and extract
+            noun-phrase chunks (NPs).
+            These NPs will be used as keywords for the document.
 
+            Helpful list of POS tags https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
 
+        */
+        boolean phraseBuildStatus = false;
+        StringBuilder phrase = new StringBuilder();
+        Set<String> phraseSet = new HashSet<>();
+
+        for(TaggedWord word : taggedWordList){
+            if (!phraseBuildStatus) {
+                //Looking for a Determiner (a, the, those...) or just any type of Adjective - JJS = comparative Adjective & JJR = superlative Adjective
+                        //Previously considered starting with an optional Determiner (a, the, those) but lead to too many bad keywords
+                if (word.tag().startsWith("JJ")) {
+                    phraseBuildStatus = true;
+                    phrase.append(word.word()).append(" ");
+                }
+
+            } else {
+                //Looking for any of the 3 types of Adjective - JJS = comparative Adjective & JJR = superlative Adjective
+                if (word.tag().equals("JJ") || word.tag().equals("JJS")|| word.tag().equals("JJR")) {
+                    phrase.append(word.word()).append(" ");
+
+                    /*
+                    If there is a Noun of any kind, then close the phrase.
+                        Nouns are either NN, NNS (plural), NNP (proper singular) or NNPS (proper plural), this is why I use .startsWith("NN")
+                    */
+                } else if (word.tag().startsWith("NN")) {
+                    phrase.append(word.word()).append(" ");
+                    phraseBuildStatus = false;
+                    phraseSet.add(phrase.toString().replaceAll("[^\\w\\s-]", "")); //Removes punctuation etc but keeps hyphens
+                    phrase = new StringBuilder();
+
+                } else {
+                    //Bail from creating phrase - not a NP chunk - reset loop and clear phrase buffer
+                    phraseBuildStatus = false;
+                    phrase = new StringBuilder();
+                }
+            }
+        }
+        return phraseSet;
+    }
 }
