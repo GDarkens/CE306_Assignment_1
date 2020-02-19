@@ -8,7 +8,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.company.Main.*;
 import static com.company.TextProcessing.stopWordRemoval;
 
 class DocumentProcessing {
@@ -46,7 +45,7 @@ class DocumentProcessing {
         return webpageText;
     }
 
-    static void tablesAndBulletExtract(Document webpageDoc){
+    static void tablesAndBulletExtract(PipelineObject workingDoc, Document webpageDoc){
         /*
             From a given Document, select Table and Bullet Point
             elements and place them in an array after removing markdown.
@@ -57,8 +56,8 @@ class DocumentProcessing {
                  lines with stop words only are not added)
          */
         Elements docElements;
-        webpageTableArray = new ArrayList<>();
-        webpageBulletArray = new ArrayList<>();
+        workingDoc.webpageTableArray = new ArrayList<>();
+        workingDoc.webpageBulletArray = new ArrayList<>();
 
         //Table extraction
         docElements = webpageDoc.getElementsByTag("table");
@@ -66,7 +65,7 @@ class DocumentProcessing {
         for(String line : docElements.toString().split("</tr>")){
             line = Jsoup.parse(line).text();
             if(!(stopWordRemoval(line).equals(""))){
-                webpageTableArray.add(line
+                workingDoc.webpageTableArray.add(line
                         .toLowerCase());
             }
         }
@@ -81,7 +80,7 @@ class DocumentProcessing {
         for(String line : docElements.toString().split("</li>")){
             line = Jsoup.parse(line).text();
             if(!(stopWordRemoval(line).equals(""))){
-                webpageBulletArray.add(line
+                workingDoc.webpageBulletArray.add(line
                         .toLowerCase());
             }
         }
@@ -89,7 +88,7 @@ class DocumentProcessing {
         webpageDoc.select("li").remove();
     }
 
-    static void metaKeywordExtract(Document webpageDoc){
+    static void metaKeywordExtract(PipelineObject workingDoc, Document webpageDoc){
         /*
             Will attempt to extract meta tags on the webpage that are
             relevant. Meta tags of type "keyword" used to identify the page
@@ -110,7 +109,7 @@ class DocumentProcessing {
                         .stripTrailing()
                         .stripLeading();
 
-                webpageMetatagArray.add(keyword);
+                workingDoc.webpageMetatagArray.add(keyword);
             }
         }catch (Exception e){
             System.out.println("Exception in meta tag extraction. Likely no meta tags of type \"keyword\" on webpage.");

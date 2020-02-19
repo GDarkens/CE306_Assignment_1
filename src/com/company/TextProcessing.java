@@ -8,7 +8,7 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import java.text.BreakIterator;
 import java.util.*;
 
-import static com.company.Main.webpageSentenceArray;
+
 
 class TextProcessing {
 
@@ -45,7 +45,7 @@ class TextProcessing {
         return stringJoiner.toString();
     }
 
-    static void textPreProcessor(String webpageText){
+    static void textPreProcessor(PipelineObject workingDoc, String webpageText){
         /*
             Splits sentences on punctuation - determined by BreakIterator
             so it is less likely to break on titles like "Dr." or other
@@ -53,7 +53,7 @@ class TextProcessing {
             Case fold all words.
         */
         BreakIterator breakIterator = BreakIterator.getSentenceInstance(Locale.ENGLISH);
-        webpageSentenceArray = new ArrayList<>();
+        workingDoc.webpageSentenceArray = new ArrayList<>();
 
 
         breakIterator.setText(webpageText);
@@ -61,7 +61,7 @@ class TextProcessing {
 
         //For each sentence, before adding make it lower case (case fold)
         for(int finish = breakIterator.next(); finish != BreakIterator.DONE; start = finish, finish = breakIterator.next()) {
-            webpageSentenceArray.add(
+            workingDoc.webpageSentenceArray.add(
                     webpageText.substring(start, finish).toLowerCase(Locale.ENGLISH)
             );
         }

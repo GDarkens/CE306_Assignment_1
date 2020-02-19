@@ -25,6 +25,8 @@ class PipelineObject {
     List<TaggedWord> taggedTableList;
     List<TaggedWord> taggedMetatagList;
 
+    Set<String> keywordSet = new HashSet<>();
+
     String theUrl;
 
     PipelineObject(String URL){
@@ -32,19 +34,19 @@ class PipelineObject {
         webpageMetatagArray = new ArrayList<>();
         webpageBulletArray = new ArrayList<>();
         webpageTableArray = new ArrayList<>();
-        Set<String> keywordSet = new HashSet<>();
+        keywordSet = new HashSet<>();
 
         theUrl = URL;
 
 
         webpageDoc = webpageGrabber(URL);
 
-        tablesAndBulletExtract(webpageDoc);
-        metaKeywordExtract(webpageDoc);
+        tablesAndBulletExtract(this, webpageDoc);
+        metaKeywordExtract(this,webpageDoc);
 
         webpageText = htmlParse(webpageDoc);
 
-        textPreProcessor(webpageText);
+        textPreProcessor(this,webpageText);
 
         //Just calls partOfSpeechTagging() on all data I have off the webpage
         tagHandler();
