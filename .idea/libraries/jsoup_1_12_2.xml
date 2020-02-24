@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jsoup-1.12.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/assets/jsoup-1.12.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/assets/lucene-analyzers-common-8.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/assets/lucene-analyzers-nori-8.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/assets/lucene-core-8.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/assets/stanford-postagger-3.9.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

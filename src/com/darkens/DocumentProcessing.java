@@ -42,6 +42,7 @@ class DocumentProcessing {
         webpageText = webpage.parser(htmlParser)
                 .text();
 
+
         return webpageText;
     }
 
@@ -69,8 +70,6 @@ class DocumentProcessing {
                         .toLowerCase());
             }
         }
-        //Remove all table entries from the main document now I have grabbed them
-        webpageDoc.select("table").remove();
 
 
 
@@ -84,8 +83,6 @@ class DocumentProcessing {
                         .toLowerCase());
             }
         }
-        //Remove all list (ordered or unordered) entries from the main document now I have grabbed them
-        webpageDoc.select("li").remove();
     }
 
     static void metaKeywordExtract(PipelineObject workingDoc, Document webpageDoc){
@@ -112,7 +109,7 @@ class DocumentProcessing {
                 workingDoc.webpageMetatagArray.add(keyword);
             }
         }catch (Exception e){
-            System.out.println("Exception in meta tag extraction. Likely no meta tags of type \"keyword\" on webpage.");
+            System.out.println("No meta tags of type \"keyword\" on given webpage.");
         }
     }
 }
